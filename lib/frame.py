@@ -1,29 +1,28 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from lib.sequence import Sequence
 from lib.text_mixin import TextMixin
 
 
 class Frame(TextMixin):
-    def __init__(self):
+    def __init__(self: 'Frame'):
         TextMixin.__init__(self)
-        self.registers = [0] * 9
+        self.segments = [None] * 9 * 16
 
-    def set_register(self, register, value):
-        self.registers[register] = value;
+    def set_segment(self: 'Frame', segment: int, value: bool) -> 'Frame':
+        self.segments[segment] = value
         return self
 
-    def repeat(self, amount, time_unit):
-        """
-        :type amount: int
-        :type time_unit: TimeUnit
-        :return: Sequence
-        """
-        time_delta = time_unit.to_timedelta(amount)
+    def clear_segment(self: 'Frame', segment: int) -> 'Frame':
+        self.segments[segment] = None
+        return self
+
+    def repeat(self: 'Frame', seconds: int = 0, minutes: int = 0) -> Sequence:
+        time_delta = timedelta(seconds=seconds, minutes=minutes)
         end_time = datetime.now() + time_delta
 
         def generator():
             while datetime.now() < end_time:
-                yield self.registers
+                yield self.segments
 
         return Sequence(generator)
