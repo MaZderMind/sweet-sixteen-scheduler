@@ -13,10 +13,11 @@ if RPiDriver.can_run():
 
 display.setup()
 
-
 Frame() \
     .row(0).col(2) \
     .text("foo") \
     .set_segment(0, True) \
     .repeat(seconds=5) \
     .display()
+
+# keeps Websocket-Server running until killed with Ctrl-C
