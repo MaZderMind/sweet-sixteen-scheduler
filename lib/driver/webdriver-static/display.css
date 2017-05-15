@@ -3,7 +3,7 @@
   width: 994px;
   height: 900.00000036px;
   position: relative;
-  background-image: url(sweet-sixteen-stripped.png);
+  background-image: url('/display/sweet-sixteen-stripped.png');
   background-size: 994px 900.00000036px;
 }
 .board .display svg {

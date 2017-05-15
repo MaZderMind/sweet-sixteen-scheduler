@@ -1,3 +1,5 @@
+@static: '/display';
+
 .board {
 	@f: 1.104444444;
 	//@w: 470px;
@@ -8,7 +10,7 @@
 	height: @w / @f;
 	position: relative;
 
-	background-image: url(sweet-sixteen-stripped.png);
+	background-image: url('@{static}/sweet-sixteen-stripped.png');
 	background-size: (@w) (@w / @f);
 
 	.display svg {
