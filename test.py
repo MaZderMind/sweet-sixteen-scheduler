@@ -7,7 +7,8 @@ from lib.sequence import Sequence
 display = Display()
 Sequence.set_default_display(display)
 
-display.add_driver(WebDriver())
+web_driver = WebDriver()
+display.add_driver(web_driver)
 if RPiDriver.can_run():
     display.add_driver(RPiDriver())
 
@@ -17,7 +18,5 @@ Frame() \
     .row(0).col(2) \
     .text("foo") \
     .set_segment(0, True) \
-    .repeat(seconds=5) \
+    .repeat(seconds=60) \
     .display()
-
-# keeps Websocket-Server running until killed with Ctrl-C

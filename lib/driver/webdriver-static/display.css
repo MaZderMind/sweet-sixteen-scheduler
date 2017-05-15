@@ -1,0 +1,90 @@
+.board {
+  float: left;
+  width: 994px;
+  height: 900.00000036px;
+  position: relative;
+  background-image: url(sweet-sixteen-stripped.png);
+  background-size: 994px 900.00000036px;
+}
+.board .display svg {
+  position: absolute;
+  width: 210px;
+  height: 297px;
+}
+.board .display svg.d-0-0 {
+  top: 110px;
+  left: 30px;
+}
+.board .display svg.d-0-1 {
+  top: 110px;
+  left: 278px;
+}
+.board .display svg.d-0-2 {
+  top: 110px;
+  left: 526px;
+}
+.board .display svg.d-0-3 {
+  top: 110px;
+  left: 774px;
+}
+.board .display svg.d-1-0 {
+  top: 470px;
+  left: 30px;
+}
+.board .display svg.d-1-1 {
+  top: 470px;
+  left: 278px;
+}
+.board .display svg.d-1-2 {
+  top: 470px;
+  left: 526px;
+}
+.board .display svg.d-1-3 {
+  top: 470px;
+  left: 774px;
+}
+.board .display svg path,
+.board .display svg circle {
+  fill: #d0d1c7 !important;
+}
+.board .display svg.green path.enabled,
+.board .display svg.green circle.enabled {
+  fill: #1df500 !important;
+}
+.board .display svg.red path.enabled,
+.board .display svg.red circle.enabled {
+  fill: #f52900 !important;
+}
+.board .led svg {
+  position: absolute;
+  width: 54px;
+  height: 54px;
+  top: 843px;
+}
+.board .led svg.l-0 {
+  left: 33px;
+}
+.board .led svg.l-1 {
+  left: 157.25px;
+}
+.board .led svg.l-2 {
+  left: 281.5px;
+}
+.board .led svg.l-3 {
+  left: 405.75px;
+}
+.board .led svg.l-4 {
+  left: 530px;
+}
+.board .led svg.l-5 {
+  left: 654.25px;
+}
+.board .led svg.l-6 {
+  left: 778.5px;
+}
+.board .led svg.l-7 {
+  left: 902.75px;
+}
+.board .led svg path.enabled {
+  fill: url(#rEnabled) !important;
+}

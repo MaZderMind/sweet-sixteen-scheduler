@@ -90,3 +90,5 @@ ENV/
 # IntelliJ
 /*.iml
 /.idea
+
+node_modules
