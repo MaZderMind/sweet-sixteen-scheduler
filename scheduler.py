@@ -1,3 +1,5 @@
+import sys
+
 from lib.display import Display
 from lib.driver.rpi_driver import RPiDriver
 from lib.driver.webdriver import WebDriver
@@ -14,9 +16,10 @@ if RPiDriver.can_run():
 
 display.setup()
 
-Frame() \
-    .row(0).col(2) \
-    .text("foo") \
-    .set_segment(0, True) \
-    .repeat(seconds=60) \
-    .display()
+while True:
+    Frame() \
+        .row(0).col(2) \
+        .text("foo") \
+        .set_segment(0, True) \
+        .repeat(seconds=5) \
+        .display()

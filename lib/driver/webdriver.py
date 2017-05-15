@@ -1,58 +1,51 @@
-import asyncio
+import threading
 from pathlib import Path
-from threading import Thread
 
-import socketio
-from aiohttp import web
-from aiohttp_index import IndexMiddleware
-
+import flask
+from flask import Flask
+from flask_socketio import SocketIO
 from lib.driver.driver import Driver
 
-DISPLAY = '/display'
+
+def static_dir() -> str:
+    return str(Path(__file__).parent / 'webdriver-static')
 
 
 class WebDriver(Driver):
-    namespace = '/display'
-
     def __init__(self, port=8080):
         super().__init__()
 
+        self.thread = threading.Thread(target=self._run)
+        self.app = app = Flask(__name__)
+        self.sio = sio = SocketIO(app)
+
         self.port = port
-        self.thread = Thread(target=self._run)
-        self.sio = sio = socketio.AsyncServer(async_mode='aiohttp')
-        self.app = app = web.Application(middlewares=[
-            IndexMiddleware(),
-        ])
-        sio.attach(app)
-        self._setup_app(app)
 
-        @sio.on('connect', namespace=WebDriver.namespace)
-        def connect(sid, environ):
-            print("connect ", sid)
-            yield from sio.emit('setup', {
+        @sio.on('connect')
+        def connect():
+            print("connect")
+            sio.emit('setup', {
                 'foo': 'bar'
-            }, namespace=WebDriver.namespace)
+            })
 
-    def _static_dir(self) -> str:
-        return str(Path(__file__).parent / 'webdriver-static')
+        @app.route('/')
+        def index():
+            return flask.send_from_directory(static_dir(), 'index.html')
 
-    def _setup_app(self, app):
-        self.app.router.add_static(
-            '/',
-            path=self._static_dir(),
-            name='static')
+        @app.route('/display/<path:path>')
+        def display_statics(path):
+            return flask.send_from_directory(static_dir(), path)
 
     def setup(self) -> 'WebDriver':
         self.thread.start()
         return self
 
     def _run(self):
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        web.run_app(self.app, port=self.port)
+        self.sio.run(self.app, port=self.port)
+        print("run to completion")
 
     def output(self, frame: 'Frame') -> 'WebDriver':
-        #self.sio.emit("frame", frame, namespace='/display')
+        # self.sio.emit("frame", frame)
         pass
 
     def join(self) -> 'WebDriver':
