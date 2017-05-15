@@ -88,3 +88,9 @@
 .board .led svg path.enabled {
   fill: url(#rEnabled) !important;
 }
+.scroller {
+  overflow: hidden;
+  overflow-x: scroll;
+  margin: 30px;
+  zoom: 0.45;
+}
