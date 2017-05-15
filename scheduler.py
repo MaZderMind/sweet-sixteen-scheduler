@@ -1,12 +1,10 @@
-import sys
-
 from lib.display import Display
 from lib.driver.rpi_driver import RPiDriver
 from lib.driver.webdriver import WebDriver
 from lib.frame import Frame
 from lib.sequence import Sequence
 
-display = Display()
+display = Display(board_count=4)
 Sequence.set_default_display(display)
 
 web_driver = WebDriver()

@@ -1,6 +1,9 @@
 class Driver(object):
     def __init__(self):
-        pass
+        self.display = None
+
+    def set_display(self, display: 'Display'):
+        self.display = display
 
     def setup(self) -> 'Driver':
         raise NotImplementedError("setup() needs to be implemented by subclass of Driver")

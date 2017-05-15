@@ -25,7 +25,8 @@ class WebDriver(Driver):
         def connect():
             print("connect")
             sio.emit('setup', {
-                'foo': 'bar'
+                'boardCount': self.display.board_count,
+                'clientPlugins': [],
             })
 
         @app.route('/')

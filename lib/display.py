@@ -2,12 +2,14 @@ from lib.driver.driver import Driver
 
 
 class Display(object):
-    def __init__(self):
+    def __init__(self, board_count=1):
         self.frames_per_second = 60
+        self.board_count = board_count
         self.drivers = []
 
     def add_driver(self, driver: Driver) -> 'Display':
         self.drivers.append(driver)
+        driver.set_display(self)
         return self
 
     def set_frame_rate(self, frames_per_second: int) -> 'Display':
