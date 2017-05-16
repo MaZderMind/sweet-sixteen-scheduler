@@ -3,7 +3,7 @@ from lib.driver.driver import Driver
 
 class Display(object):
     def __init__(self, board_count=1):
-        self.frames_per_second = 60
+        self.frames_per_second = 2
         self.board_count = board_count
         self.drivers = []
 

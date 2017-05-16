@@ -46,8 +46,8 @@ class WebDriver(Driver):
         print("run to completion")
 
     def output(self, frame: 'Frame') -> 'WebDriver':
-        # self.sio.emit("frame", frame)
-        pass
+        self.sio.emit("frame", frame.segments)
+        return self
 
     def join(self) -> 'WebDriver':
         self.thread.join()

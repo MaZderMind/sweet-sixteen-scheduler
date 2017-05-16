@@ -21,6 +21,7 @@ class Sequence(object):
             raise RuntimeError("display() called but no Display configured or passed")
 
         for frame in self.generator():
+            frame.fill_transparent()
             display.output(frame)
             time.sleep(1 / display.frames_per_second)
 
@@ -30,6 +31,7 @@ class Sequence(object):
         pass
 
     @classmethod
+    # FIXME use global config, rename lib -> display or sth.
     def set_default_display(cls, display: Display):
         cls.default_display = display
         pass
