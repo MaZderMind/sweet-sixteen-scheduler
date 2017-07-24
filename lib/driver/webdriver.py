@@ -16,19 +16,19 @@ def static_dir() -> str:
 
 
 class WebDriver(Driver):
-    def __init__(self, port=8080):
+    def __init__(self):
         super().__init__()
 
         self.thread = threading.Thread(target=self._run)
         self.app = app = Flask(__name__)
         self.sio = sio = SocketIO(app)
 
-        self.port = port
+        self.port = Config.getint('driver.web', 'port')
 
         @sio.on('connect')
         def connect():
             sio.emit('setup', {
-                'boardCount': self.display.board_count,
+                'boardCount': Config.getint('display', 'boards'),
                 'clientPlugins': [],
             })
 
