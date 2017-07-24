@@ -1,10 +1,15 @@
 from datetime import datetime, timedelta
 
+from lib.segment_mixin import SegmentMixin
 from lib.sequence import Sequence
+from lib.system.config import Config
 from lib.text_mixin import TextMixin
 
+SEGMENTS_PER_DIGIT = 16
+DIGITS_PER_BOARD = 9
 
-class Frame(TextMixin):
+
+class Frame(TextMixin, SegmentMixin):
     """
     Represents a displayable State of the LED-Display.
     A Frame is constituted by the State of all Segments on the Display. Each
@@ -19,7 +24,12 @@ class Frame(TextMixin):
         Initializes all Segments to transparen
         """
         TextMixin.__init__(self)
-        self.segments = [None] * 9 * 16 * 4  # FIXME access number of Boards
+        SegmentMixin.__init__(self)
+        # @formatter:off
+        self.segments = [None] * Config.getint('display', 'boards') \
+                               * DIGITS_PER_BOARD \
+                               * SEGMENTS_PER_DIGIT
+        # @formatter:on
 
     def set_segment(self, segment, value):
         """
