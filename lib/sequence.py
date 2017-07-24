@@ -35,7 +35,6 @@ class Sequence(object):
         :return: lib.sequence.Sequence
         """
         for frame in self.generator():
-            frame.fill_transparent()
             manager.output(frame)
             time.sleep(1 / Config.getfloat("display", "framerate"))
 

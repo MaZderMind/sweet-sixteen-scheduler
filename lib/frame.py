@@ -1,15 +1,14 @@
 from datetime import datetime, timedelta
 
+from lib.constants import *
+from lib.driver.to_bytes_mixin import ToBytesMixin
 from lib.segment_mixin import SegmentMixin
 from lib.sequence import Sequence
 from lib.system.config import Config
 from lib.text_mixin import TextMixin
 
-SEGMENTS_PER_DIGIT = 16
-DIGITS_PER_BOARD = 9
 
-
-class Frame(TextMixin, SegmentMixin):
+class Frame(TextMixin, SegmentMixin, ToBytesMixin):
     """
     Represents a displayable State of the LED-Display.
     A Frame is constituted by the State of all Segments on the Display. Each
@@ -27,7 +26,7 @@ class Frame(TextMixin, SegmentMixin):
         SegmentMixin.__init__(self)
         # @formatter:off
         self.segments = [None] * Config.getint('display', 'boards') \
-                               * DIGITS_PER_BOARD \
+                               * DRIVERS_PER_BOARD \
                                * SEGMENTS_PER_DIGIT
         # @formatter:on
 
@@ -68,6 +67,17 @@ class Frame(TextMixin, SegmentMixin):
                          for segment in self.segments]
         return self
 
+    def copy_non_transparent(self):
+        """
+        Copy the Frame and set all transparent Segments to off, removing any
+        remaining transparency.
+
+        :return: lib.frame.Frame
+        """
+        copy = Frame.from_frame(self)
+        copy.fill_transparent()
+        return copy
+
     def repeat(self, seconds=0, minutes=0):
         """
         Create a Sequence from this Frame, which repeats the current Frame for
@@ -75,7 +85,7 @@ class Frame(TextMixin, SegmentMixin):
 
         :param seconds: Seconds-Part of the Duration
         :type seconds: int
-        :param minutes: Seconds-Part of the Duration
+        :param minutes: Minutes-Part of the Duration
         :type minutes: int
         :return: lib.sequence.Sequence
         """
@@ -91,6 +101,18 @@ class Frame(TextMixin, SegmentMixin):
                 yield Frame.from_segments(self.segments)
 
         return Sequence(generator)
+
+    @classmethod
+    def from_frame(cls, frame):
+        """
+        Create a new Frame initialized with the specified Segments of
+        the specified Frame
+
+        :param frame: Frame to copy
+        :type frame: lib.frame.Frame
+        :return: lib.frame.Frame
+        """
+        return Frame.from_segments(frame.segments)
 
     @classmethod
     def from_segments(cls, segments):

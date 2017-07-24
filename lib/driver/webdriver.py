@@ -24,6 +24,7 @@ class WebDriver(Driver):
         self.app = app = Flask(__name__)
         self.sio = sio = SocketIO(app)
 
+        self.host = Config.get('driver.web', 'host')
         self.port = Config.getint('driver.web', 'port')
 
         @sio.on('connect')
@@ -44,7 +45,7 @@ class WebDriver(Driver):
         self.thread.start()
 
     def _run(self):
-        self.sio.run(self.app, port=self.port)
+        self.sio.run(self.app, host=self.host, port=self.port)
 
     def output(self, frame):
         """
