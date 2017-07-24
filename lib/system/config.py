@@ -1,7 +1,8 @@
-import os.path
 import logging
-from lib.system.args import Args
+import os.path
 from configparser import ConfigParser
+
+from lib.system.args import Args
 
 __all__ = ['Config']
 Config = ConfigParser()

@@ -1,10 +1,11 @@
+import logging
 import threading
 from pathlib import Path
 
 import flask
-import logging
 from flask import Flask
 from flask_socketio import SocketIO
+
 from lib.driver.driver import Driver
 from lib.system.config import Config
 

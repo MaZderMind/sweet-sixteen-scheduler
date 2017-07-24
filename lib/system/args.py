@@ -24,5 +24,4 @@ parser.add_argument('-t', '--timestamp', action='store_true',
 parser.add_argument('-i', '--ini-file', action='store',
                     help="Load a custom config.ini-File")
 
-
 Args = parser.parse_args()

@@ -1,6 +1,6 @@
-import sys
-import signal
 import logging
+import signal
+import sys
 
 from lib.driver import manager
 from lib.system import config

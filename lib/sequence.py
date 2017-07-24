@@ -1,6 +1,5 @@
-import time
-
 import logging
+import time
 
 from lib.driver import manager
 from lib.system.config import Config

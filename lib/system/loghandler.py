@@ -3,7 +3,6 @@ import time
 
 
 class LogFormatter(logging.Formatter):
-
     def __init__(self, docolor, timestamps=False):
         super().__init__()
         self.docolor = docolor
@@ -25,6 +24,7 @@ class LogFormatter(logging.Formatter):
                 c_mod = 31
                 c_msg = 31
 
+            # @formatter:off
             fmt = ''.join([
                 '\x1b[%dm' % c_lvl,  # set levelname color
                 '%(levelname)8s',    # print levelname
@@ -35,6 +35,7 @@ class LogFormatter(logging.Formatter):
                 ': %(message)s',     # print message
                 '\x1b[0m'            # reset formatting
             ])
+            # @formatter:on
         else:
             fmt = '%(levelname)8s %(name)s: %(message)s'
 
@@ -51,7 +52,6 @@ class LogFormatter(logging.Formatter):
 
 
 class LogHandler(logging.StreamHandler):
-
     def __init__(self, docolor, timestamps):
         super().__init__()
         self.setFormatter(LogFormatter(docolor, timestamps))
