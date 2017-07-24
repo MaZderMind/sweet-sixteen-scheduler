@@ -92,3 +92,4 @@ ENV/
 /.idea
 
 node_modules
+lib/driver/webdriver-static/display.css
