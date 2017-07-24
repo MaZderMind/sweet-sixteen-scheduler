@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from lib.frame import Frame
 from lib.system import application
 
