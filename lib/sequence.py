@@ -1,6 +1,11 @@
 import time
 
-from lib.display import Display
+import logging
+
+from lib.driver import manager
+from lib.system.config import Config
+
+log = logging.getLogger('Sequence')
 
 
 class Sequence(object):
@@ -20,28 +25,20 @@ class Sequence(object):
         :type generator: Generator[lib.frame.Frame]
         """
         self.generator = generator
-        print("sequence init")
 
     def __iter__(self):
         return self.generator()
 
-    def display(self, display=None):
+    def display(self):
         """
         Play this Sequence now back onto the Display
 
         :return: lib.sequence.Sequence
         """
-        if not display:
-            display = Sequence.default_display
-
-        if not display:
-            raise RuntimeError("display() called but no Display configured "
-                               "or passed")
-
         for frame in self.generator():
             frame.fill_transparent()
-            display.output(frame)
-            time.sleep(1 / display.frames_per_second)
+            manager.output(frame)
+            time.sleep(1 / Config.getfloat("display", "framerate"))
 
         return self
 
@@ -55,10 +52,4 @@ class Sequence(object):
 
         :return: lib.frame.Frame
         """
-        pass
-
-    @classmethod
-    # FIXME use global config, rename lib -> display or sth.
-    def set_default_display(cls, display: Display):
-        cls.default_display = display
         pass

@@ -2,9 +2,13 @@ import threading
 from pathlib import Path
 
 import flask
+import logging
 from flask import Flask
 from flask_socketio import SocketIO
 from lib.driver.driver import Driver
+from lib.system.config import Config
+
+log = logging.getLogger('WebDriver')
 
 
 def static_dir() -> str:
@@ -23,7 +27,6 @@ class WebDriver(Driver):
 
         @sio.on('connect')
         def connect():
-            print("connect")
             sio.emit('setup', {
                 'boardCount': self.display.board_count,
                 'clientPlugins': [],
@@ -37,18 +40,10 @@ class WebDriver(Driver):
         def display_statics(path):
             return flask.send_from_directory(static_dir(), path)
 
-    def setup(self):
-        """
-        Setup the Web-Interface.
-
-        :return: lib.driver.webdriver.WebDriver
-        """
         self.thread.start()
-        return self
 
     def _run(self):
         self.sio.run(self.app, port=self.port)
-        print("run to completion")
 
     def output(self, frame):
         """
@@ -60,3 +55,14 @@ class WebDriver(Driver):
         """
         self.sio.emit("frame", frame.segments)
         return self
+
+    @classmethod
+    def can_run(cls):
+        """
+        Examine if the WebDriver is enabled in the Config.
+
+        :return: bool
+        """
+        enabled = Config.getboolean("driver.web", "enabled")
+        log.info("Enabled according to config? {}".format(enabled))
+        return enabled

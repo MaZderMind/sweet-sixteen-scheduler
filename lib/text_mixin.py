@@ -25,7 +25,7 @@ class TextMixin(object):
         :type text: str
         :return: lib.frame.Frame
         """
-        print("text @", self._row, self._col, text)
+        # FIXME text @, self._row, self._col
         self.set_segment(42, True).set_segment(32, True)
         return self
 

@@ -2,11 +2,17 @@ import sys
 import signal
 import logging
 
+from lib.driver import manager
+from lib.system import config
 from lib.system.args import Args
 from lib.system.loghandler import LogHandler
 
+log = logging.getLogger('Application')
+
 
 def init():
+    log.debug('configuring Logging')
+
     # configure logging
     docolor = (Args.color == 'always') or (Args.color == 'auto' and
                                            sys.stderr.isatty())
@@ -24,7 +30,13 @@ def init():
     logging.root.setLevel(level)
 
     # make killable by ctrl-c
-    logging.debug('setting SIGINT handler')
+    log.debug('setting SIGINT handler')
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-    logging.info('Python Version: %s', sys.version_info)
+    log.info('Python Version: %s', sys.version_info)
+
+    log.debug('loading Configuration')
+    config.load()
+
+    log.debug('Initializing DriverManager')
+    manager.init()
