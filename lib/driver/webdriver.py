@@ -37,7 +37,12 @@ class WebDriver(Driver):
         def display_statics(path):
             return flask.send_from_directory(static_dir(), path)
 
-    def setup(self) -> 'WebDriver':
+    def setup(self):
+        """
+        Setup the Web-Interface.
+
+        :return: lib.driver.webdriver.WebDriver
+        """
         self.thread.start()
         return self
 
@@ -45,10 +50,13 @@ class WebDriver(Driver):
         self.sio.run(self.app, port=self.port)
         print("run to completion")
 
-    def output(self, frame: 'Frame') -> 'WebDriver':
+    def output(self, frame):
+        """
+        Output a Frame to the Web-Interface.
+
+        :param frame: Frame to transmit
+        :type frame: lib.frame.Frame
+        :return: lib.driver.webdriver.WebDriver
+        """
         self.sio.emit("frame", frame.segments)
         return self
-
-    def join(self) -> 'WebDriver':
-        self.thread.join()
-        pass
