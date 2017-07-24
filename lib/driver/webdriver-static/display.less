@@ -1,102 +1,102 @@
 @static: '/display';
 
 .board {
-	@f: 1.104444444;
-	//@w: 470px;
-	@w: 994px;
-	float: left;
+  @f: 1.104444444;
+  //@w: 470px;
+  @w: 994px;
+  float: left;
 
-	width: @w;
-	height: @w / @f;
-	position: relative;
+  width: @w;
+  height: @w / @f;
+  position: relative;
 
-	background-image: url('@{static}/sweet-sixteen-stripped.png');
-	background-size: (@w) (@w / @f);
+  background-image: url('@{static}/sweet-sixteen-stripped.png');
+  background-size: (@w) (@w / @f);
 
-	.display svg {
-		@w: 210px;
-		@h: 297px;
+  .display svg {
+    @w: 210px;
+    @h: 297px;
 
-		@xOffset: 30px;
-		@xGutter: 38px;
-		@yOffset: 110px;
-		@yGutter: 63px;
+    @xOffset: 30px;
+    @xGutter: 38px;
+    @yOffset: 110px;
+    @yGutter: 63px;
 
-		@cDisabled: hsl(69, 10%, 80%);
-		@cGreen: hsl(113, 100%, 48%);
-		@cRed: hsl(10, 100%, 48%);
+    @cDisabled: hsl(69, 10%, 80%);
+    @cGreen: hsl(113, 100%, 48%);
+    @cRed: hsl(10, 100%, 48%);
 
-		position: absolute;
-		width: @w;
-		height: @h;
+    position: absolute;
+    width: @w;
+    height: @h;
 
-		.row(@y) when (@y < 2) {
-			.cell(@y, @x) when (@x < 4) {
+    .row(@y) when (@y < 2) {
+      .cell(@y, @x) when (@x < 4) {
 
-				&.d-@{y}-@{x} {
-					top: @yOffset + (@y * (@h + @yGutter));
-					left: @xOffset + (@x * (@w + @xGutter));
-				}
+        &.d-@{y}-@{x} {
+          top: @yOffset + (@y * (@h + @yGutter));
+          left: @xOffset + (@x * (@w + @xGutter));
+        }
 
-				.cell(@y, @x+1);
-			}
+        .cell(@y, @x+1);
+      }
 
-			.cell(@y, 0);
-			.row(@y + 1);
-		}
-		.row(0);
+      .cell(@y, 0);
+      .row(@y + 1);
+    }
+    .row(0);
 
-		path, circle {
-			fill: @cDisabled !important;
-		}
+    path, circle {
+      fill: @cDisabled !important;
+    }
 
-		&.green {
-			path.enabled, circle.enabled {
-				fill: @cGreen !important;
-			}
-		}
+    &.green {
+      path.enabled, circle.enabled {
+        fill: @cGreen !important;
+      }
+    }
 
-		&.red {
-			path.enabled, circle.enabled {
-				fill: @cRed !important;
-			}
-		}
-	}
+    &.red {
+      path.enabled, circle.enabled {
+        fill: @cRed !important;
+      }
+    }
+  }
 
-	.led svg {
-		@sz: 54px;
-		@xOffset: 33px;
-		@xGutter: 70.25px;
-		@yOffset: 843px;
+  .led svg {
+    @sz: 54px;
+    @xOffset: 33px;
+    @xGutter: 70.25px;
+    @yOffset: 843px;
 
-		@cDisabled: hsl(69, 10%, 80%);
-		@cEnabled: hsl(113, 100%, 48%);
+    @cDisabled: hsl(69, 10%, 80%);
+    @cEnabled: hsl(113, 100%, 48%);
 
-		position: absolute;
-		width: @sz;
-		height: @sz;
+    position: absolute;
+    width: @sz;
+    height: @sz;
 
-		top: @yOffset;
+    top: @yOffset;
 
-		.cell(@x) when (@x < 8) {
-			&.l-@{x} {
-				left: @xOffset + (@x * (@sz + @xGutter));
-			}
+    .cell(@x) when (@x < 8) {
+      &.l-@{x} {
+        left: @xOffset + (@x * (@sz + @xGutter));
+      }
 
-			.cell(@x + 1);
-		}
-		.cell(0);
+      .cell(@x + 1);
+    }
+    .cell(0);
 
-		path.enabled {
-			fill: url(#rEnabled) !important;
-		}
-	}
+    path.enabled {
+      fill: url(#rEnabled) !important;
+    }
+  }
 }
 
 .scroller {
-	overflow: hidden;
-	overflow-x: scroll;
-	margin: 30px;
+  overflow: hidden;
+  overflow-x: scroll;
+  margin: 30px;
 
-	// zoom: 0.45;
+  // zoom: 0.45;
 }
