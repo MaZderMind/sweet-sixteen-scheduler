@@ -4,14 +4,12 @@ import logging
 # noinspection PyUnresolvedReferences
 import translitcodec
 
+from lib.constants import *
 from lib.direction import Direction
 from lib.system.config import Config
 from lib.text import patterns
 
 log = logging.getLogger("TextMixin")
-
-ROWS_PER_BOARD = 2
-SEGMENTS_PER_BOARD_ROW = 4
 
 
 def clean(text):
@@ -34,8 +32,7 @@ class TextMixin(object):
         """
         self._row = 0
         self._col = 0
-        self._max_cols = Config.getint('display',
-                                       'boards') * SEGMENTS_PER_BOARD_ROW
+        self._max_cols = Config.getint('display', 'boards') * DIGITS_PER_ROW
 
         self._max_rows = ROWS_PER_BOARD
 

@@ -29,4 +29,4 @@ def output(frame):
     :type frame: lib.frame.Frame
     """
     for driver in drivers:
-        driver.output(frame)
+        driver.output(frame.copy_non_transparent())

@@ -1,17 +1,18 @@
 import logging
 
-log = logging.getLogger("SegmentMixin")
+from lib.constants import *
 
-DIGITS_PER_ROW = 4
-SEGMENTS_PER_DIGIT = 16
-DIGITS_PER_BOARD = (2 * DIGITS_PER_ROW) + 1
+log = logging.getLogger("SegmentMixin")
 
 
 def _offset(row, col):
     board = int(col / DIGITS_PER_ROW)
     board_col = col % DIGITS_PER_ROW
 
-    segment = (DIGITS_PER_BOARD * board) + (row * DIGITS_PER_ROW)
+    if row == 1:
+        board_col = 3 - board_col
+
+    segment = (DRIVERS_PER_BOARD * board) + (row * DIGITS_PER_ROW)
     return (board_col + segment) * SEGMENTS_PER_DIGIT
 
 
@@ -19,11 +20,10 @@ def _dp_offset(row, col):
     board = int(col / DIGITS_PER_ROW)
     board_col = col % DIGITS_PER_ROW
 
-    rows = [
-        [6, 5, 4, 3],
-        [7, 2, 1, 0],
-    ]
-    return (8 * 16) + 3
+    if row == 1:
+        board_col = 3 - board_col
+
+    return 0
 
 
 class SegmentMixin(object):
