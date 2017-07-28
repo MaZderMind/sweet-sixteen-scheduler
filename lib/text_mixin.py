@@ -32,9 +32,6 @@ class TextMixin(object):
         """
         self._row = 0
         self._col = 0
-        self._max_cols = Config.getint('display', 'boards') * DIGITS_PER_ROW
-
-        self._max_rows = ROWS_PER_BOARD
 
     def text(self, text):
         """
@@ -50,20 +47,18 @@ class TextMixin(object):
 
         for byte in clean_text_bytes:
             pattern = patterns.get(byte)
-            log.debug("byte 0x{:02X} = pattern {}".format(byte, pattern))
             self.set_digit(self._row, self._col, pattern)
-            self._increment_col_with_wrap()
 
         return self
 
     def _increment_col_with_wrap(self):
         self._col += 1
 
-        if self._col >= self._max_cols:
+        if self._col >= digits_per_row():
             self._col = 0
             self._row += 1
 
-        if self._row >= self._max_rows:
+        if self._row >= ROWS_PER_BOARD:
             self._row = 0
 
         log.debug("_increment_col_with_wrap to {}/{}"

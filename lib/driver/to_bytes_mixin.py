@@ -29,12 +29,18 @@ class ToBytesMixin(object):
         :type self: lib.frame.Frame
         :return: lib.frame.Frame
         """
+
         byte_array = []
+
+        """
         for segment_8_tuple in batch(self.segments, 8):
             byte = segment_8_tuple_to_byte(segment_8_tuple)
             byte_array.append(byte)
 
         log.debug("frame-segments {} converted to bytes {}"
                   .format(self.segments, byte_array))
+        """
+
+        byte_array.append(42)
 
         return bytes(byte_array)

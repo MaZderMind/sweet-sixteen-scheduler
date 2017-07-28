@@ -6,6 +6,7 @@ import flask
 from flask import Flask
 from flask_socketio import SocketIO
 
+from lib.constants import *
 from lib.driver.driver import Driver
 from lib.system.config import Config
 
@@ -30,7 +31,7 @@ class WebDriver(Driver):
         @sio.on('connect')
         def connect():
             sio.emit('setup', {
-                'boardCount': Config.getint('display', 'boards'),
+                'boardCount': num_boards(),
                 'clientPlugins': [],
             })
 
@@ -55,7 +56,7 @@ class WebDriver(Driver):
         :type frame: lib.frame.Frame
         :return: lib.driver.webdriver.WebDriver
         """
-        self.sio.emit("frame", frame.segments)
+        self.sio.emit("frame", frame.rows)
         return self
 
     @classmethod

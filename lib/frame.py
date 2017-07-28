@@ -2,13 +2,12 @@ from datetime import datetime, timedelta
 
 from lib.constants import *
 from lib.driver.to_bytes_mixin import ToBytesMixin
-from lib.segment_mixin import SegmentMixin
 from lib.sequence import Sequence
 from lib.system.config import Config
 from lib.text_mixin import TextMixin
 
 
-class Frame(TextMixin, SegmentMixin, ToBytesMixin):
+class Frame(TextMixin, ToBytesMixin):
     """
     Represents a displayable State of the LED-Display.
     A Frame is constituted by the State of all Segments on the Display. Each
@@ -23,37 +22,74 @@ class Frame(TextMixin, SegmentMixin, ToBytesMixin):
         Initializes all Segments to transparen
         """
         TextMixin.__init__(self)
-        SegmentMixin.__init__(self)
-        # @formatter:off
-        self.segments = [None] * Config.getint('display', 'boards') \
-                               * DRIVERS_PER_BOARD \
-                               * SEGMENTS_PER_DIGIT
-        # @formatter:on
+        ToBytesMixin.__init__(self)
 
-    def set_segment(self, segment, value):
+        self.rows = ROWS_PER_BOARD * [
+            digits_per_row() * [{
+                name: None for name in SEGMENT_NAMES
+            }]
+        ]
+
+    def set_segment(self, row, col, segment, value):
         """
         Set a Segment to a given Value
 
-        :param segment: Index of the Segment to set
-        :type segment: int
+        :param row: Row-Index of the Digit to change
+        :type row: int
+
+        :param col: Col-Index of the Digit to change
+        :type col: int
+
+        :param segment: Name of the Segment to set
+        :type segment: str
+
         :param value: Value to set the Segment to.
             True = LED is on,
             False = LED is off
         :type value: bool
+
         :return: lib.frame.Frame
         """
-        self.segments[segment] = value
+        if segment in SEGMENT_NAMES:
+            self.rows[row][col][segment] = value
+
         return self
 
-    def clear_segment(self, segment):
+    def clear_segment(self, row, col, segment):
         """
         Clear a Segment by setting it transparent.
 
-        :param segment: Index of the Segment to clear
-        :type segment: int
+        :param row: Row-Index of the Digit to change
+        :type row: int
+
+        :param col: Col-Index of the Digit to change
+        :type col: int
+
+        :param segment: Name of the Segment to set
+        :type segment: str
+
         :return: lib.frame.Frame
         """
-        self.segments[segment] = None
+        return self.set_segment(row, col, segment, None)
+
+    def set_digit(self, row, col, segments):
+        """
+        Set multiple Segments of a Digit to on
+
+        :param row: Row-Index of the Digit to change
+        :type row: int
+
+        :param col: Col-Index of the Digit to change
+        :type col: int
+
+        :param segments: String containing the names of the Segments to turn on
+        :type segments: str
+
+        :return: lib.frame.Frame
+        """
+        for segment in segments:
+            self.set_segment(row, col, segment, True)
+
         return self
 
     def fill_transparent(self):
@@ -63,8 +99,17 @@ class Frame(TextMixin, SegmentMixin, ToBytesMixin):
 
         :return: lib.frame.Frame
         """
-        self.segments = [False if segment is None else segment
-                         for segment in self.segments]
+        self.rows = [
+            [
+                {
+                    name: bool(self.rows[row][digit][name])
+                    for name in SEGMENT_NAMES
+                }
+                for digit in range(0, digits_per_row())
+            ]
+            for row in range(0, ROWS_PER_BOARD)
+        ]
+
         return self
 
     def copy_non_transparent(self):
@@ -98,7 +143,7 @@ class Frame(TextMixin, SegmentMixin, ToBytesMixin):
             time.
             """
             while datetime.now() < end_time:
-                yield Frame.from_segments(self.segments)
+                yield Frame.from_frame(self)
 
         return Sequence(generator)
 
@@ -112,18 +157,16 @@ class Frame(TextMixin, SegmentMixin, ToBytesMixin):
         :type frame: lib.frame.Frame
         :return: lib.frame.Frame
         """
-        return Frame.from_segments(frame.segments)
+        new_frame = Frame()
+        new_frame.rows = [
+            [
+                {
+                    name: bool(frame.rows[row][digit][name])
+                    for name in SEGMENT_NAMES
+                }
+                for digit in range(0, digits_per_row())
+            ]
+            for row in range(0, ROWS_PER_BOARD)
+        ]
 
-    @classmethod
-    def from_segments(cls, segments):
-        """
-        Create a new Frame initialized with the specified Segment
-        configuration.
-
-        :param segments: List of Segments
-        :type segments: iterable[bool|None]
-        :return: lib.frame.Frame
-        """
-        frame = Frame()
-        frame.segments = segments  # FIXME ensure list layout and types
-        return frame
+        return new_frame

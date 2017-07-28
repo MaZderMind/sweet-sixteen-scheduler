@@ -20,5 +20,5 @@ while True:
         .text(top) \
         .row(1).col(0) \
         .text(bottom) \
-        .repeat(seconds=1 / 10) \
+        .repeat(seconds=1) \
         .display()

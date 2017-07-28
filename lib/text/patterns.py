@@ -1,46 +1,38 @@
-def generate_pattern(enabled_segments=""):
-    segment_list = []
-    for segment in "gtsuhkmabncprdfe.":
-        segment_list.append(segment in enabled_segments)
-
-    return segment_list
-
-
 patterns = {
     # " "
-    0x20: generate_pattern(),
+    0x20: "",
 
     # !
-    0x21: generate_pattern("cd."),
+    0x21: "cd.",
 
     # "
-    0x22: generate_pattern("mc"),
+    0x22: "mc",
 
     # #
-    0x23: generate_pattern("hgumsp"),
+    0x23: "hgumsp",
 
     # $
-    0x24: generate_pattern("abhupdfems"),
+    0x24: "abhupdfems",
 
     # %
-    0x25: generate_pattern("ahupdemsnt"),
+    0x25: "ahupdemsnt",
 
     # &
-    0x26: generate_pattern("akmugfer"),
+    0x26: "akmugfer",
 
     # '
-    0x27: generate_pattern("m"),
+    0x27: "m",
 
     # …
 
     # A
-    0x41: generate_pattern("ghabcdup"),
+    0x41: "ghabcdup",
 
     # B
-    0x42: generate_pattern("abcdefmsp"),
+    0x42: "abcdefmsp",
 
     # C
-    0x43: generate_pattern("abhgfe"),
+    0x43: "abhgfe",
 }
 
 
