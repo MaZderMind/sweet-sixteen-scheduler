@@ -56,7 +56,10 @@ class WebDriver(Driver):
         :type frame: lib.frame.Frame
         :return: lib.driver.webdriver.WebDriver
         """
-        self.sio.emit("frame", frame.rows)
+        self.sio.emit("frame", {
+            "rows": frame.rows,
+            "leds": frame.leds
+        })
         return self
 
     @classmethod

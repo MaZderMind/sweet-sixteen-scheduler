@@ -33,8 +33,7 @@ class Frame(TextMixin, ToBytesMixin):
                     for name in SEGMENT_NAMES
                 }
 
-        # FIXME implement LEDs
-        # self.leds = LEDS_PER_BOARD * [None]
+        self.leds = [None] * num_leds()
 
     def set_segment(self, row, col, segment, value):
         """
@@ -95,11 +94,42 @@ class Frame(TextMixin, ToBytesMixin):
 
         :return: lib.frame.Frame
         """
-        print("set_digit", row, col)
         for segment in segments:
             self.set_segment(row, col, segment, True)
 
         return self
+
+    def set_led(self, index, value):
+        """
+        Set an LED to a given Value
+
+        :param index: Index of the LED to change
+        :type index: int
+
+        :param value: Value to set the LED to.
+            True = LED is on,
+            False = LED is off
+        :type value: bool
+
+        :return: lib.frame.Frame
+
+        """
+        if 0 <= index < num_leds():
+            self.leds[index] = value
+
+        return self
+
+    def clear_led(self, index):
+        """
+        Clear a Segment by setting it transparent.
+
+        :param index: Index of the LED to change
+        :type index: int
+
+        :return: lib.frame.Frame
+
+        """
+        return self.set_led(index, None)
 
     def fill_transparent(self):
         """
@@ -114,6 +144,8 @@ class Frame(TextMixin, ToBytesMixin):
                     name: bool(self.rows[rowId][digitId][name])
                     for name in SEGMENT_NAMES
                 }
+
+        self.leds = [bool(value) for value in self.leds]
 
         return self
 
@@ -173,5 +205,7 @@ class Frame(TextMixin, ToBytesMixin):
                     name: frame.rows[rowId][digitId][name]
                     for name in SEGMENT_NAMES
                 }
+
+        new_frame.leds = [value for value in frame.leds]
 
         return new_frame

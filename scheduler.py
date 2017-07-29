@@ -10,9 +10,10 @@ while True:
     Frame() \
         .set_wrap(False) \
         .row(0).col(c) \
-        .text('ABC') \
-        .row(1).col(m - c) \
-        .text('ABC') \
+        .text('AB!') \
+        .row(1).col(m - c - 3) \
+        .text('CCC') \
+        .set_led(c + 3, True) \
         .repeat(seconds=1) \
         .display()
 
