@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 from lib.constants import *
 from lib.driver.to_bytes_mixin import ToBytesMixin
 from lib.sequence import Sequence
-from lib.system.config import Config
 from lib.text_mixin import TextMixin
 
 
@@ -24,11 +23,18 @@ class Frame(TextMixin, ToBytesMixin):
         TextMixin.__init__(self)
         ToBytesMixin.__init__(self)
 
-        self.rows = ROWS_PER_BOARD * [
-            digits_per_row() * [{
-                name: None for name in SEGMENT_NAMES
-            }]
-        ]
+        self.rows = []
+        for rowId in range(0, ROWS_PER_BOARD):
+            self.rows.append([])
+            for digitId in range(0, digits_per_row()):
+                self.rows[rowId].append([])
+                self.rows[rowId][digitId] = {
+                    name: None
+                    for name in SEGMENT_NAMES
+                }
+
+        # FIXME implement LEDs
+        # self.leds = LEDS_PER_BOARD * [None]
 
     def set_segment(self, row, col, segment, value):
         """
@@ -50,7 +56,9 @@ class Frame(TextMixin, ToBytesMixin):
 
         :return: lib.frame.Frame
         """
-        if segment in SEGMENT_NAMES:
+        if segment in SEGMENT_NAMES and \
+                    0 <= row < ROWS_PER_BOARD and \
+                    0 <= col < digits_per_row():
             self.rows[row][col][segment] = value
 
         return self
@@ -87,6 +95,7 @@ class Frame(TextMixin, ToBytesMixin):
 
         :return: lib.frame.Frame
         """
+        print("set_digit", row, col)
         for segment in segments:
             self.set_segment(row, col, segment, True)
 
@@ -99,16 +108,12 @@ class Frame(TextMixin, ToBytesMixin):
 
         :return: lib.frame.Frame
         """
-        self.rows = [
-            [
-                {
-                    name: bool(self.rows[row][digit][name])
+        for rowId in range(0, ROWS_PER_BOARD):
+            for digitId in range(0, digits_per_row()):
+                self.rows[rowId][digitId] = {
+                    name: bool(self.rows[rowId][digitId][name])
                     for name in SEGMENT_NAMES
                 }
-                for digit in range(0, digits_per_row())
-            ]
-            for row in range(0, ROWS_PER_BOARD)
-        ]
 
         return self
 
@@ -158,15 +163,15 @@ class Frame(TextMixin, ToBytesMixin):
         :return: lib.frame.Frame
         """
         new_frame = Frame()
-        new_frame.rows = [
-            [
-                {
-                    name: bool(frame.rows[row][digit][name])
+        new_frame.rows = []
+
+        for rowId in range(0, ROWS_PER_BOARD):
+            new_frame.rows.append([])
+            for digitId in range(0, digits_per_row()):
+                new_frame.rows[rowId].append([])
+                new_frame.rows[rowId][digitId] = {
+                    name: frame.rows[rowId][digitId][name]
                     for name in SEGMENT_NAMES
                 }
-                for digit in range(0, digits_per_row())
-            ]
-            for row in range(0, ROWS_PER_BOARD)
-        ]
 
         return new_frame

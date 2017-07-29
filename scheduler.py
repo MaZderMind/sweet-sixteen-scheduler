@@ -4,21 +4,18 @@ from lib.system import application
 
 application.init()
 
-top = "ABC"
-bottom = "             CBA"
+i = c = -3
+m = 16
 while True:
-    top = " " + top
-    bottom = bottom[1:]
-    if len(bottom) == 0:
-        top = "ABC"
-        bottom = "             CBA"
-
-    print(top)
-    print(bottom)
     Frame() \
-        .row(0).col(0) \
-        .text(top) \
-        .row(1).col(0) \
-        .text(bottom) \
+        .set_wrap(False) \
+        .row(0).col(c) \
+        .text('ABC') \
+        .row(1).col(m - c) \
+        .text('ABC') \
         .repeat(seconds=1) \
         .display()
+
+    c = c + 1
+    if c > m:
+        c = i

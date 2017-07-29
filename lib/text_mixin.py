@@ -32,6 +32,19 @@ class TextMixin(object):
         """
         self._row = 0
         self._col = 0
+        self._wrap = True
+
+    def set_wrap(self, value):
+        """
+        Set if text that overflows the first row should wrap into the second and vice/versa
+
+        :type self: lib.frame.Frame
+        :param value: Should text wrap
+        :type value: bool
+        :return: lib.frame.Frame
+        """
+        self._wrap = value
+        return self
 
     def text(self, text):
         """
@@ -48,11 +61,15 @@ class TextMixin(object):
         for byte in clean_text_bytes:
             pattern = patterns.get(byte)
             self.set_digit(self._row, self._col, pattern)
+            self._increment_col_with_wrap()
 
         return self
 
     def _increment_col_with_wrap(self):
         self._col += 1
+
+        if not self._wrap:
+            return
 
         if self._col >= digits_per_row():
             self._col = 0
@@ -60,9 +77,6 @@ class TextMixin(object):
 
         if self._row >= ROWS_PER_BOARD:
             self._row = 0
-
-        log.debug("_increment_col_with_wrap to {}/{}"
-                  .format(self._row, self._col))
 
     def row(self, row):
         """
