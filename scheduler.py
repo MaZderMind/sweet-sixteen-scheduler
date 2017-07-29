@@ -4,16 +4,17 @@ from lib.system import application
 
 application.init()
 
-i = c = -3
+l = 5
+i = c = -l
 m = 16
 while True:
     Frame() \
         .set_wrap(False) \
         .row(0).col(c) \
-        .text('AB!') \
-        .row(1).col(m - c - 3) \
-        .text('CCC') \
-        .set_led(c + 3, True) \
+        .text('HALLO') \
+        .row(1).col(m - c - l) \
+        .text('WELT!') \
+        .set_led(c + l, True) \
         .repeat(seconds=1) \
         .display()
 
