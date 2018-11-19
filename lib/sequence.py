@@ -1,5 +1,6 @@
 import logging
-import time
+
+import eventlet
 
 from lib.driver import manager
 from lib.system.config import Config
@@ -36,7 +37,7 @@ class Sequence(object):
         """
         for frame in self.generator():
             manager.output(frame)
-            time.sleep(1 / Config.getfloat("display", "framerate"))
+            eventlet.sleep(1 / Config.getfloat("display", "framerate"))
 
         return self
 

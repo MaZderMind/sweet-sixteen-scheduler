@@ -1,10 +1,10 @@
 import logging
-import threading
 from pathlib import Path
 
+import eventlet.tpool
+import eventlet.wsgi
 import flask
-from flask import Flask
-from flask_socketio import SocketIO
+import socketio
 
 from lib.constants import *
 from lib.driver.driver import Driver
@@ -21,15 +21,18 @@ class WebDriver(Driver):
     def __init__(self):
         super().__init__()
 
-        self.thread = threading.Thread(target=self._run)
-        self.app = app = Flask(__name__)
-        self.sio = sio = SocketIO(app)
+        self.sio = sio = socketio.Server()
+        self.app = app = flask.Flask(__name__)
 
-        self.host = Config.get('driver.web', 'host')
-        self.port = Config.getint('driver.web', 'port')
+        host = Config.get('driver.web', 'host')
+        port = Config.getint('driver.web', 'port')
+        self.addr = (host, port,)
+
+        # wrap Flask application with engineio's middleware
+        self.app = socketio.Middleware(sio, app)
 
         @sio.on('connect')
-        def connect():
+        def connect(sid, environ):
             sio.emit('setup', {
                 'boardCount': num_boards(),
                 'clientPlugins': [],
@@ -43,10 +46,14 @@ class WebDriver(Driver):
         def display_statics(path):
             return flask.send_from_directory(static_dir(), path)
 
-        self.thread.start()
+        eventlet.spawn(self._run)
+        eventlet.sleep(0)
 
     def _run(self):
-        self.sio.run(self.app, host=self.host, port=self.port)
+        # deploy as an eventlet WSGI server
+        log.info("deploying wsgi server")
+        eventlet.wsgi.server(eventlet.listen(self.addr), self.app)
+        log.erro("wsgi server stopped")
 
     def output(self, frame):
         """
